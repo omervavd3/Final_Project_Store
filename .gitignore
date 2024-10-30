@@ -1,0 +1,15 @@
+# .gitignore
+
+# Node.js modules
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Environment variables
+.env
+
+# Build output directories
+dist/
+build/
