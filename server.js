@@ -48,15 +48,18 @@ const categoryRouter = require("./routes/categoryRoutes");
 const cartRouter = require("./routes/cartRoutes");
 const purchaseRouter = require("./routes/purchaseRoutes");
 const twitterRouter = require('./routes/twitterRoutes');
+const trendsRouter = require('./routes/trendsRoutes');
+
 app.use("/user", userRouter);
 app.use("/product", productRouter);
 app.use("/category", categoryRouter);
 app.use("/cart", cartRouter);
 app.use("/purchase", purchaseRouter);
 app.use("/tweet", twitterRouter);
+app.use('/api', trendsRouter);
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
 

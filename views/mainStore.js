@@ -209,3 +209,30 @@ async function amountOfProductsInCart() {
         amountOfProductsInCartDiv.innerHTML = data.amount
     })
 }
+async function fetchPerfumeTrends() {
+    try {
+        const response = await fetch('/api/perfume-trends');
+        const data = await response.json();
+
+        if (data.success) {
+            const trendsContainer = document.getElementById('perfume-trends');
+            trendsContainer.innerHTML = data.data.map(article => `
+                <div>
+                    <h2>${article.title}</h2>
+                    <img src="${article.image}" alt="${article.title}" width="200" />
+                    <p>${article.description}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                </div>
+                <hr />
+            `).join('');
+        } else {
+            console.error("Failed to load perfume trends:", data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching perfume trends:", error);
+    }
+}
+
+fetchPerfumeTrends();
+
+
