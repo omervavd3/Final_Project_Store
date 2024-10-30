@@ -15,6 +15,9 @@ app.use(cookieParser())
 //for mongoDB
 const mongoose = require('mongoose')
 
+//jQuery
+const $ = require( "jquery" )
+
 //for .env
 require('dotenv').config();
 

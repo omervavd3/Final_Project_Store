@@ -8,24 +8,25 @@ showLoading = () => {
     loadingDiv.style.display = "grid";
 };
 
-async function isUserLoggedIn() {
-    await fetch("/user/isUserLoggedIn", {
-        method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+function isUserLoggedIn() {
+    $.ajax({
+        url: "/user/isUserLoggedIn",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            console.log(data);
+            if (data.userCookie) {
+                
+            } else {
+                console.log("Hi")
+            }
         },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data);
-        if(data.userCookie) {
-
-        } else {
-
+        error: function(error) {
+            console.error("Error:", error);
         }
-    })
+    });
 }
+
 
 async function loadPurchaseHistory() {
     showLoading()
