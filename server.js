@@ -56,3 +56,6 @@ app.use("/purchase", purchaseRouter);
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+const { TwitterApi } = require("twitter-api-v2");
+
+const twitterClient = new TwitterApi({ appKey: 'NSpopso1DTIPAoU4mAuBaQZO3', appSecret: 'FFZGfTe3BGwQOJ8PPSaEneC6heLRL0SQEYSqRFaodEjgePTkm4', accessToken: '1851596838983303168-C7HIwSFB25oPXiTdQHFot6gar8dX3Q', accessSecret: 'Oo0Jfyc4gkTNVuvzUcGXSb36BaIk91IgrUTjiiXsGx2ip', });
