@@ -376,3 +376,24 @@ function setPurchaseCard(products, productsAmounts, totalPrice, productsTitle) {
     html += `<p>Total price of purchase: ${totalPrice}$</p>`
     return html
 }
+
+async function sendTweet(ev) {
+    console.log(ev)
+    ev.preventDefault();
+    const tweet = ev.target.elements.tweet.value;
+    console.log(tweet)
+    ev.target.reset();
+    console.log(tweet)
+    await fetch("/tweet/postTweet", {
+        method: "POST",
+        headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({tweet}),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data)
+    })
+}
