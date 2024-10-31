@@ -2,7 +2,6 @@ async function handleLogIn(ev) {
     ev.preventDefault();
     const name = ev.target.elements.name.value;
     const password = ev.target.elements.password.value;
-
     ev.target.reset();
     const user = { name: name, password: password };
     await fetch("/user/logIn", {

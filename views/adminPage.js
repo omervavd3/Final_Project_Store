@@ -397,3 +397,25 @@ async function sendTweet(ev) {
         console.log(data)
     })
 }
+
+async function addStoreLocation(ev) {
+    ev.preventDefault();
+    const storeName = ev.target.elements.storeName.value;
+    const storeLat = ev.target.elements.storeLat.value;
+    const storeLng = ev.target.elements.storeLng.value;
+    const storePhone = ev.target.elements.storePhone.value;
+    const storeCity = ev.target.elements.storeCity.value;
+    ev.target.reset();
+    await fetch("/storeLocation/addStoreLocation", {
+        method: "POST",
+        headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({name:storeName, lat:storeLat, lng:storeLng, phone:storePhone, city:storeCity}),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data)
+    })
+}

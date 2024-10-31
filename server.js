@@ -49,6 +49,7 @@ const cartRouter = require("./routes/cartRoutes");
 const purchaseRouter = require("./routes/purchaseRoutes");
 const twitterRouter = require('./routes/twitterRoutes');
 const trendsRouter = require('./routes/trendsRoutes');
+const storeLocationRouter = require('./routes/storeLocationRoutes');
 
 app.use("/user", userRouter);
 app.use("/product", productRouter);
@@ -57,6 +58,7 @@ app.use("/cart", cartRouter);
 app.use("/purchase", purchaseRouter);
 app.use("/tweet", twitterRouter);
 app.use('/api', trendsRouter);
+app.use('/storeLocation', storeLocationRouter);
 
 
 app.listen(PORT, () => {

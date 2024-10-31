@@ -160,6 +160,30 @@
       <input type="submit" value="Send Tweet">
     </form>
 
+    <form method="post" onsubmit="addStoreLocation(event)">
+      <div class="form-floating">
+        <input type="text" name="storeName" class="form-control" placeholder="Store Name">
+        <label for="floatingStoreName">Store Name</label>
+      </div>
+      <div class="form-floating">
+        <input type="number" step="0.000000001" name="storeLat" class="form-control" placeholder="Store Lat">
+        <label for="floatingStoreLat">Store Lat</label>
+      </div>
+      <div class="form-floating">
+        <input type="number" step="0.000000001" name="storeLng" class="form-control" placeholder="Store Lng">
+        <label for="floatingStoreLng">Store Lng</label>
+      </div>
+      <div class="form-floating">
+        <input type="number" maxlength="10" name="storePhone" class="form-control" placeholder="Store Phone">
+        <label for="floatingStorePhone">Store Phone</label>
+      </div>
+      <div class="form-floating">
+        <input type="text" name="storeCity" class="form-control" placeholder="Store City">
+        <label for="floatingStoreCity">Store City</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Store</button>
+    </form>
+
   </main>
 
 

@@ -236,3 +236,45 @@ async function fetchPerfumeTrends() {
 fetchPerfumeTrends();
 
 
+async function initMap() {
+    await fetch("/storeLocation/getAllStoresLocations", {
+        method: "GET",
+        headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        // Initialize the map and set view
+        const map = L.map('map').setView([32.0853, 34.7818], 11); // Centered on Tel Aviv
+   
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+   
+        // Example locations array (replace these with locations fetched from your database)
+        const locations = data.stores.map(store => ({
+            lat: store.lat,
+            lng: store.lng,
+            name: store.name
+        }));
+   
+        // Add a marker for each location
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lng]).addTo(map);
+            marker.bindPopup(`<b>${location.name}</b><br>Coordinates: ${location.lat}, ${location.lng}`);
+        });
+
+        const contact = data.stores.map((store) => {
+            return `
+                <ul>
+                    <li>Phone: ${store.phone}</li>
+                    <li>City: ${store.city}</li>
+                </ul>
+            `
+        }).join(" ")
+        document.getElementById("contact").innerHTML = contact;
+    })
+}

@@ -9,9 +9,12 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script src="./mainStore.js" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
+
 </head>
 
-<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart()">
+<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart(), initMap()">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="./index.html">Store</a>
@@ -57,12 +60,18 @@
             <div class="row" id="productDiv">
                 <!-- all products -->
             </div>
-           <div>
+            <div>
                 <h1>Perfume Trends</h1>
                 <div id="perfume-trends"></div>
-            
-        </div>
+
+            </div>
     </main>
+
+    <footer>
+        <div id="map"></div>
+        <div id="contact">
+        </div>
+    </footer>
 
 
     <div id="loading">
