@@ -236,7 +236,7 @@ function fetchPerfumeTrends() {
 }
 
 
-// fetchPerfumeTrends();
+fetchPerfumeTrends();
 
 
 function initMap() {
