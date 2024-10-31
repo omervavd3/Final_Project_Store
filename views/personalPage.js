@@ -28,56 +28,70 @@ function isUserLoggedIn() {
 }
 
 
-async function loadPurchaseHistory() {
-    showLoading()
-    const purchaseHistoryDiv = document.getElementById("purchaseHistory");
-    var html = ""
-    await fetch("/purchase/getPurchasesById", {
+function loadPurchaseHistory() {
+    showLoading();
+    const purchaseHistoryDiv = $("#purchaseHistory");
+    let html = "";
+
+    $.ajax({
+        url: "/purchase/getPurchasesById",
         method: "GET",
         headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+            Accept: "application/json",
+            "Content-Type": "application/json",
         },
-    })
-    .then((res) => res.json())
-    .then(async (data) => {
-        purchases = data.purchases
-        console.log(purchases)
-        for (let i = 0; i < purchases.length; i++) {
-            var productsIds = [];
-            var productsAmounts = [];
-            var totalPrice = purchases[i].totalPrice;
-            var products = [];
-            var productsTitle = [];
-            for (let j = 0; j < purchases[i].productsIds.length; j++) {
-                productsIds[j] = purchases[i].productsIds[j]              
-                productsAmounts[j] = purchases[i].productsAmounts[j]
-                productsTitle[j] = purchases[i].productsTitels[j]
+        success: function(data) {
+            const purchases = data.purchases;
+            console.log(purchases);
+            let purchasePromises = [];
+
+            for (let i = 0; i < purchases.length; i++) {
+                const productsIds = purchases[i].productsIds;
+                const productsAmounts = purchases[i].productsAmounts;
+                const totalPrice = purchases[i].totalPrice;
+                const productsTitle = purchases[i].productsTitels;
+                let products = [];
+
+                // Create promises to fetch product details
+                for (let index = 0; index < productsIds.length; index++) {
+                    purchasePromises.push(
+                        $.ajax({
+                            url: "/product/getProductById",
+                            method: "POST",
+                            headers: {
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                            },
+                            data: JSON.stringify({ id: productsIds[index] }),
+                            success: function(data) {
+                                products[index] = data.product;
+                            }
+                        })
+                    );
+                }
+
+                // After all product fetches are complete, build the HTML
+                purchasePromises.push(
+                    Promise.all(purchasePromises).then(() => {
+                        console.log(productsIds, productsAmounts, totalPrice, products);
+                        html += setPurchaseCard(products, productsAmounts, totalPrice, productsTitle);
+                    })
+                );
             }
-            for (let index = 0; index < productsIds.length; index++) {
-                await fetch("/product/getProductById", {
-                    method: "POST",
-                    headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({id:productsIds[index]}),
-                })
-                .then((res) => res.json())
-                .then((data) => {
-                    products[index] = data.product
-                })
-            }
-            console.log(productsIds,
-                productsAmounts,
-                totalPrice,
-                products)
-            html += setPurchaseCard(products, productsAmounts, totalPrice, productsTitle)
+
+            // Wait for all purchase promises to complete
+            Promise.all(purchasePromises).then(() => {
+                purchaseHistoryDiv.html(html);
+                hideLoading();
+            });
+        },
+        error: function(error) {
+            console.error("Error fetching purchase history:", error);
+            hideLoading();
         }
-    })
-    purchaseHistoryDiv.innerHTML = html
-    hideLoading()
+    });
 }
+
 
 function setPurchaseCard(products, productsAmounts, totalPrice, productsTitle) {
     // products.sort((a, b) => a.title.localeCompare(b.title))

@@ -8,172 +8,146 @@ showLoading = () => {
     loadingDiv.style.display = "grid";
 };
 
-async function isUserLoggedIn() {
-    await fetch("/user/isUserLoggedIn", {
+function isUserLoggedIn() {
+    $.ajax({
+        url: "/user/isUserLoggedIn",
         method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data);
-        if(data.userCookie) {
-            document.getElementById("nav-sign-up").style.display = "none"
-            document.getElementById("nav-log-in").style.display = "none"
-            document.getElementById("nav-personal").style.display = "block"
-            alert("Logged in")
-        } else {
-            document.getElementById("nav-sign-up").style.display = "block"
-            document.getElementById("nav-log-in").style.display = "block"
-            document.getElementById("nav-personal").style.display = "none"
-            alert("Not logged in")
+        contentType: "application/json",
+        success: function(data) {
+            console.log(data);
+            if (data.userCookie) {
+                $("#nav-sign-up").hide();
+                $("#nav-log-in").hide();
+                $("#nav-personal").show();
+                alert("Logged in");
+            } else {
+                $("#nav-sign-up").show();
+                $("#nav-log-in").show();
+                $("#nav-personal").hide();
+                alert("Not logged in");
+            }
         }
-    })
+    });
 }
 
-async function getUserCart() {
-    showLoading()
-    await fetch("/cart/getUserCart", {
+
+function getUserCart() {
+    showLoading();
+    $.ajax({
+        url: "/cart/getUserCart",
         method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        contentType: "application/json",
+        success: function(data) {
+            const userCartDiv = $("#userCartDiv");
+            console.log(data);
+            if (data.userCart[0]) {
+                console.log(data.userCart);
+                createUserCartProductCard(data.userCart).then(html => {
+                    html += '<a href="./checkOut.html">To Checkout</a>';
+                    userCartDiv.html(html);
+                });
+            } else {
+                userCartDiv.html("No Products");
+            }
         },
-    })
-    .then((res) => res.json())
-    .then(async (data) => {
-        const userCartDiv = document.getElementById("userCartDiv");
-        console.log(data)
-        if(data.userCart[0]) {
-            console.log(data.userCart);
-            var html = await createUserCartProductCard(data.userCart);
-            html += '<a href="./checkOut.html">To Checkout</a>'
-            userCartDiv.innerHTML = html;
-        } else {
-            userCartDiv.innerHTML = "No Products"
-        }
-    })
-    hideLoading()
+        complete: hideLoading
+    });
 }
 
-async function createUserCartProductCard(userCart) {
+
+function createUserCartProductCard(userCart) {
     var products = [];
-    for (let index = 0; index < userCart.length; index++) {
-        await fetch("/product/getProductById", {
+    var requests = userCart.map((item, index) => {
+        return $.ajax({
+            url: "/product/getProductById",
             method: "POST",
-            headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({id:userCart[index].productId}),
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            products[index] = data.product
-        })
-    }
-    const p = {
-        title: String,
-        description: String,
-        price: Number,
-        amount: Number,
-        img: String,
-        category: String,
-        size: Number,
-        sex: String
-    }
-    products.sort((a, b) => a.title.localeCompare(b.title))
-    const html = products.map((p,index) => {
-        var text = "Add to cart"
-        var disableClass = ''
-        var bool = false
-        if(p.amount == 0) {
-            disableClass = 'disable'
-            bool = true
-            text = "Out of stock"
-        }
-        return `
-            <div class="col">
-              <div class="card" style="width: 18rem;">
-                <img src="${p.img}" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">${p.title}</h5>
-                  <p class="card-text">${p.description}</p>
+            contentType: "application/json",
+            data: JSON.stringify({ id: item.productId }),
+            success: function(data) {
+                products[index] = data.product;
+            }
+        });
+    });
+    return Promise.all(requests).then(() => {
+        products.sort((a, b) => a.title.localeCompare(b.title));
+        const html = products.map((p, index) => {
+            var text = "Add to cart";
+            var disableClass = '';
+            var bool = false;
+            if (p.amount == 0) {
+                disableClass = 'disable';
+                bool = true;
+                text = "Out of stock";
+            }
+            return `
+                <div class="col">
+                  <div class="card" style="width: 18rem;">
+                    <img src="${p.img}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">${p.title}</h5>
+                      <p class="card-text">${p.description}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Price: ${p.price}$</li>
+                      <li class="list-group-item">Amount: ${userCart[index].amount}</li>
+                      <li class="list-group-item">Size: ${p.size}</li>
+                    </ul>
+                    <div class="card-body">
+                      <a class="card-link" onclick="removeOneFromCart('${p._id}')">Remove One</a>
+                      <a class="card-link" onclick="removeAllFromCart('${p._id}', '${userCart[index].amount}')">Remove All</a>
+                    </div>
+                  </div>
                 </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Price: ${p.price}$</li>
-                  <li class="list-group-item">Amount: ${userCart[index].amount}</li>
-                  <li class="list-group-item">Size: ${p.size}</li>
-                </ul>
-                <div class="card-body">
-                  <a class="card-link" onclick="removeOneFromCart('${p._id}')">Remove One</a>
-                  <a class="card-link" onclick="removeAllFromCart('${p._id}', '${userCart[index].amount}')">Remove All</a>
-                </div>
-              </div>
-            </div>
-        `
-    }).join(" ")
-    return html
+            `;
+        }).join(" ");
+        return html;
+    });
 }
 
-async function removeOneFromCart(productId) {
-    showLoading()
-    await fetch("/cart/removeOneFromCart", {
+
+function removeOneFromCart(productId) {
+    showLoading();
+    $.ajax({
+        url: "/cart/removeOneFromCart",
         method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-    })
-    await fetch("/product/removeOneFromCart", {
-        method: "PATCH",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-        getUserCart()
-    })
-    hideLoading()
+        contentType: "application/json",
+        data: JSON.stringify({ productId }),
+        success: function(data) {
+            console.log(data);
+            $.ajax({
+                url: "/product/removeOneFromCart",
+                method: "PATCH",
+                contentType: "application/json",
+                data: JSON.stringify({ productId }),
+                success: function(data) {
+                    console.log(data);
+                    getUserCart();
+                }
+            });
+        }
+    }).always(hideLoading);
 }
 
-async function removeAllFromCart(productId, amount) {
-    showLoading()
-    await fetch("/cart/removeAllFromCart", {
-        method: "DELETe",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-    })
-    await fetch("/product/removeAllFromCart", {
-        method: "PATCH",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId, amount}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-        getUserCart()
-    })
-    hideLoading()
+
+function removeAllFromCart(productId, amount) {
+    showLoading();
+    $.ajax({
+        url: "/cart/removeAllFromCart",
+        method: "DELETE",
+        contentType: "application/json",
+        data: JSON.stringify({ productId }),
+        success: function(data) {
+            console.log(data);
+            $.ajax({
+                url: "/product/removeAllFromCart",
+                method: "PATCH",
+                contentType: "application/json",
+                data: JSON.stringify({ productId, amount }),
+                success: function(data) {
+                    console.log(data);
+                    getUserCart();
+                }
+            });
+        }
+    }).always(hideLoading);
 }

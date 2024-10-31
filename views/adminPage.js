@@ -9,55 +9,51 @@ showLoading = () => {
 };
 
 async function isAdminLoggedIn() {
-    await fetch("/user/isAdminLoggedIn", {
+    $.ajax({
+        url: "/user/isAdminLoggedIn",
         method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        dataType: "json",
+        success: function(data) {
+            console.log(data);
+            if (data.adminCookie) {
+                alert("Logged in");
+            } else {
+                alert("Not logged in");
+            }
         },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data);
-        if(data.adminCookie) {
-            alert("Logged in")
-        } else {
-            alert("Not logged in")
+        error: function(error) {
+            console.error("Error checking admin login status:", error);
         }
-    })
+    });
 }
+
 
 async function getAllProducts() {
-    await fetch("/product/getAllProducts", {
-        method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        const productDiv = document.getElementById("productDiv");
-        if(data.products[0]) {
-            const html = createAdminProductCard(data.products);
-            productDiv.innerHTML = html;
+    try {
+        const response = await $.ajax({
+            url: "/product/getAllProducts",
+            method: "GET",
+            dataType: "json",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+        
+        const productDiv = $("#productDiv");
+        if (response.products && response.products.length > 0) {
+            const html = createAdminProductCard(response.products);
+            productDiv.html(html);
         } else {
-            productDiv.innerHTML = "No Products"
+            productDiv.html("No Products");
         }
-    })
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
 }
 
+
 function createAdminProductCard(products) {
-    const p = {
-        title: String,
-        description: String,
-        price: Number,
-        amount: Number,
-        img: String,
-        category: String,
-        size: Number,
-        sex: String
-    }
     products.sort((a, b) => a.title.localeCompare(b.title))
     const html = products.map((p) => {
         return `
@@ -86,32 +82,29 @@ function createAdminProductCard(products) {
 }
 
 async function deleteProduct(productId) {
-    await fetch("/cart/deleteFromDeleteProduct", {
-        method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId:productId}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
+    try {
+        await $.ajax({
+            url: "/cart/deleteFromDeleteProduct",
+            method: "DELETE",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({ productId: productId })
+        });
 
-    })
-    await fetch("/product/deleteFromDeleteProduct", {
-        method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productId:productId}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
+        await $.ajax({
+            url: "/product/deleteFromDeleteProduct",
+            method: "DELETE",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({ productId: productId })
+        });
 
-    })
-    getAllProducts()
+        getAllProducts();
+    } catch (error) {
+        console.error("Error deleting product:", error);
+    }
 }
+
 
 async function updateDiv(id,title,price,description,amount,img,category) {
     const updateProductDiv = document.getElementById("updateProduct");
@@ -134,26 +127,30 @@ async function handleAddProduct(ev) {
     const img = ev.target.elements.img.value;
     const category = ev.target.elements.category.value;
     ev.target.reset();
-    const updateProductDiv = document.getElementById("updateProduct");
-    updateProductDiv.style.display = "none"
-    const newProduct = {title, price,description,amount,img:img,category};
-    await fetch("/product/addProduct", {
-        method: "POST",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        if(data.isCreated) {
-            window.location.href = "./adminPage.html"
+    
+    $("#updateProduct").hide();
+    
+    const newProduct = { title, price, description, amount, img, category };
+    
+    try {
+        const response = await $.ajax({
+            url: "/product/addProduct",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(newProduct)
+        });
+        
+        if (response.isCreated) {
+            window.location.href = "./adminPage.html";
         } else {
-            alert("Product already exists")
+            alert("Product already exists");
         }
-    })
+    } catch (error) {
+        console.error("Error adding product:", error);
+    }
 }
+
 
 async function handleUpdateProduct(ev) {
     ev.preventDefault();
@@ -165,182 +162,170 @@ async function handleUpdateProduct(ev) {
     const category = ev.target.elements.category.value;
     const id = ev.target.elements.id.value;
     ev.target.reset();
-    const updateProduct = {id,title, price,description,amount,img:img,category};
-    await fetch("/product/updateProduct", {
-        method: "PATCH",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateProduct),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        if(data.isUptadet) {
-            window.location.href = "./adminPage.html"
+    
+    const updateProduct = { id, title, price, description, amount, img, category };
+    
+    try {
+        const response = await $.ajax({
+            url: "/product/updateProduct",
+            method: "PATCH",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(updateProduct)
+        });
+        
+        if (response.isUptadet) {
+            window.location.href = "./adminPage.html";
         } else {
-            alert("Try again")
+            alert("Try again");
         }
-    })
+    } catch (error) {
+        console.error("Error updating product:", error);
+    }
 }
+
 
 async function addCategory(ev) {
     ev.preventDefault();
     const category = ev.target.elements.category.value;
     ev.target.reset();
-    await fetch("/category/addCategory", {
-        method: "POST",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({category}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        if(data.isCreated) {
+
+    try {
+        const response = await $.ajax({
+            url: "/category/addCategory",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({ category })
+        });
+
+        if (response.isCreated) {
             alert("Category created");
-            getAllCategories()
+            getAllCategories();
         } else {
-            alert("Category already exists")
+            alert("Category already exists");
         }
-    })
+    } catch (error) {
+        console.error("Error adding category:", error);
+    }
 }
 
-async function getAllCategories() {categorySelect
-    const deleteCategorySelectDiv = document.getElementById("deleteCategorySelect");
-    const updateCategorySelectDiv = document.getElementById("updateCategorySelect");
-    const categorySelectDiv = document.getElementById("categorySelect");
-    await fetch("/category/getAllCategories", {
-        method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        const categories = data.categories
-        categories.sort((a, b) => a.category.localeCompare(b.category))
-        const html = categories.map((category) => {
-            return `
-                <option value="${category.category}">${category.category}</option>
-            `
-        }).join(" ")
-        deleteCategorySelectDiv.innerHTML = html
-        updateCategorySelectDiv.innerHTML = html
-        categorySelectDiv.innerHTML = html
-    })
+
+async function getAllCategories() {
+    const deleteCategorySelectDiv = $("#deleteCategorySelect");
+    const updateCategorySelectDiv = $("#updateCategorySelect");
+    const categorySelectDiv = $("#categorySelect");
+
+    try {
+        const response = await $.ajax({
+            url: "/category/getAllCategories",
+            method: "GET",
+            contentType: "application/json",
+            dataType: "json"
+        });
+
+        const categories = response.categories.sort((a, b) => a.category.localeCompare(b.category));
+        const html = categories.map(category => `<option value="${category.category}">${category.category}</option>`).join(" ");
+        
+        deleteCategorySelectDiv.html(html);
+        updateCategorySelectDiv.html(html);
+        categorySelectDiv.html(html);
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+    }
 }
+
 
 async function deleteCategory(ev) {
     ev.preventDefault();
     const deleteCategory = ev.target.elements.deleteCategory.value;
     ev.target.reset();
-    var productsIds
-    await fetch("/category/deleteCategory", {
-        method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({category:deleteCategory}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-    })
-    await fetch("/product/deleteCategory", {
-        method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({category:deleteCategory}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        productsIds = data.productsIds
-    })
-    await fetch("/cart/deleteCategory", {
-        method: "DELETE",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({productsIds:productsIds}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        getAllCategories()
-        getAllProducts()
-    })
+
+    let productsIds;
+    
+    try {
+        await $.ajax({
+            url: "/category/deleteCategory",
+            method: "DELETE",
+            contentType: "application/json",
+            data: JSON.stringify({ category: deleteCategory })
+        });
+
+        const productResponse = await $.ajax({
+            url: "/product/deleteCategory",
+            method: "DELETE",
+            contentType: "application/json",
+            data: JSON.stringify({ category: deleteCategory })
+        });
+        productsIds = productResponse.productsIds;
+
+        await $.ajax({
+            url: "/cart/deleteCategory",
+            method: "DELETE",
+            contentType: "application/json",
+            data: JSON.stringify({ productsIds: productsIds })
+        });
+
+        getAllCategories();
+        getAllProducts();
+    } catch (error) {
+        console.error("Error deleting category:", error);
+    }
 }
 
+
 async function loadPurchaseHistory() {
-    showLoading()
-    const purchaseHistoryDiv = document.getElementById("purchaseHistory");
-    var html = ""
-    await fetch("/purchase/getAllPurchases", {
-        method: "GET",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-    })
-    .then((res) => res.json())
-    .then(async (data) => {
-        purchases = data.purchases
-        console.log(purchases)
+    showLoading();
+    const purchaseHistoryDiv = $("#purchaseHistory");
+    let html = "";
+
+    try {
+        const purchasesData = await $.ajax({
+            url: "/purchase/getAllPurchases",
+            method: "GET",
+            contentType: "application/json"
+        });
+        const purchases = purchasesData.purchases;
+        
         for (let i = 0; i < purchases.length; i++) {
-            var productsIds = [];
-            var productsAmounts = [];
-            var totalPrice = purchases[i].totalPrice;
-            var userId = purchases[i].userId;
-            var userName = ""
-            var products = [];
-            var productsTitle = [];
-            for (let j = 0; j < purchases[i].productsIds.length; j++) {
-                productsIds[j] = purchases[i].productsIds[j]              
-                productsAmounts[j] = purchases[i].productsAmounts[j]
-                productsTitle[j] = purchases[i].productsTitels[j]
-            }
-            await fetch("/user/getUserNameById", {
+            const productsIds = purchases[i].productsIds;
+            const productsAmounts = purchases[i].productsAmounts;
+            const productsTitle = purchases[i].productsTitels;
+            const totalPrice = purchases[i].totalPrice;
+            const userId = purchases[i].userId;
+            let userName = "";
+            let products = [];
+
+            const userData = await $.ajax({
+                url: "/user/getUserNameById",
                 method: "POST",
-                headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify({userId:userId}),
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                userName = data.userName;
-            })
+                contentType: "application/json",
+                data: JSON.stringify({ userId })
+            });
+            userName = userData.userName;
+
             for (let index = 0; index < productsIds.length; index++) {
-                await fetch("/product/getProductById", {
+                const productData = await $.ajax({
+                    url: "/product/getProductById",
                     method: "POST",
-                    headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({id:productsIds[index]}),
-                })
-                .then((res) => res.json())
-                .then((data) => {
-                    products[index] = data.product
-                })
+                    contentType: "application/json",
+                    data: JSON.stringify({ id: productsIds[index] })
+                });
+                products[index] = productData.product;
             }
-            console.log(productsIds,
-                productsAmounts,
-                totalPrice,
-                products)
-            html += `<h3>${userName} bought:</h3>`
-            html += setPurchaseCard(products, productsAmounts, totalPrice, productsTitle)
+
+            html += `<h3>${userName} bought:</h3>`;
+            html += setPurchaseCard(products, productsAmounts, totalPrice, productsTitle);
         }
-    })
-    purchaseHistoryDiv.innerHTML = html
-    hideLoading()
+
+        purchaseHistoryDiv.html(html);
+    } catch (error) {
+        console.error("Error loading purchase history:", error);
+    } finally {
+        hideLoading();
+    }
 }
+
 
 function setPurchaseCard(products, productsAmounts, totalPrice, productsTitle) {
     // products.sort((a, b) => a.title.localeCompare(b.title))
@@ -377,45 +362,37 @@ function setPurchaseCard(products, productsAmounts, totalPrice, productsTitle) {
     return html
 }
 
-async function sendTweet(ev) {
-    console.log(ev)
+function sendTweet(ev) {
     ev.preventDefault();
-    const tweet = ev.target.elements.tweet.value;
-    console.log(tweet)
-    ev.target.reset();
-    console.log(tweet)
-    await fetch("/tweet/postTweet", {
+    const tweet = $(ev.target).find('input[name="tweet"]').val();
+    $(ev.target).trigger('reset');
+    $.ajax({
+        url: "/tweet/postTweet",
         method: "POST",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({tweet}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-    })
+        contentType: "application/json",
+        data: JSON.stringify({ tweet }),
+        success: function(data) {
+            console.log(data);
+        }
+    });
 }
 
-async function addStoreLocation(ev) {
+
+function addStoreLocation(ev) {
     ev.preventDefault();
-    const storeName = ev.target.elements.storeName.value;
-    const storeLat = ev.target.elements.storeLat.value;
-    const storeLng = ev.target.elements.storeLng.value;
-    const storePhone = ev.target.elements.storePhone.value;
-    const storeCity = ev.target.elements.storeCity.value;
-    ev.target.reset();
-    await fetch("/storeLocation/addStoreLocation", {
+    const storeName = $(ev.target).find('input[name="storeName"]').val();
+    const storeLat = $(ev.target).find('input[name="storeLat"]').val();
+    const storeLng = $(ev.target).find('input[name="storeLng"]').val();
+    const storePhone = $(ev.target).find('input[name="storePhone"]').val();
+    const storeCity = $(ev.target).find('input[name="storeCity"]').val();
+    $(ev.target).trigger('reset');
+    $.ajax({
+        url: "/storeLocation/addStoreLocation",
         method: "POST",
-        headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({name:storeName, lat:storeLat, lng:storeLng, phone:storePhone, city:storeCity}),
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        console.log(data)
-    })
+        contentType: "application/json",
+        data: JSON.stringify({ name: storeName, lat: storeLat, lng: storeLng, phone: storePhone, city: storeCity }),
+        success: function(data) {
+            console.log(data);
+        }
+    });
 }
