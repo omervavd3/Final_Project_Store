@@ -103,12 +103,76 @@ exports.getUserNameById = async(req,res) => {
       }
 }
 
+exports.getUserName = async(req,res) => {
+    try {
+        const userCookie = req.cookies.user;
+        const user = await UserModel.findOne({_id:userCookie})
+        const name = user.name
+        res.status(200).send({userName:name});
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: error.messeage });
+      }
+}
+
 exports.getUserGender = async(req,res) => {
     try {
         const userCookie = req.cookies.user;
         const user = await UserModel.findOne({_id:userCookie})
         const gender = user.gender
         res.status(200).send({userGender:gender});
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: error.messeage });
+      }
+}
+
+exports.changePassword = async(req,res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        const userCookie = req.cookies.user;
+        const crypto = require('crypto');
+        function hashPassword(password) {
+          // Create a SHA-256 hash of the password
+          const hash = crypto.createHash('sha256');
+          hash.update(password);
+          return hash.digest('hex'); // Return the hash as a hexadecimal string
+        }
+        const oldPas = await hashPassword(oldPassword)
+        const user = await UserModel.findOne({_id:userCookie})
+        if(user.password == oldPas) {
+            const newPas = await hashPassword(newPassword)
+            user.password = newPas
+            await user.save()
+            res.status(200).send({changedPassword: true});
+        } else {
+            res.status(200).send({changedPassword: false});
+        }
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: error.messeage });
+      }
+}
+
+exports.deleteUser = async(req,res) => {
+    try {
+        const { password } = req.body;
+        const userCookie = req.cookies.user;
+        const crypto = require('crypto');
+        function hashPassword(password) {
+          // Create a SHA-256 hash of the password
+          const hash = crypto.createHash('sha256');
+          hash.update(password);
+          return hash.digest('hex'); // Return the hash as a hexadecimal string
+        }
+        const pas = await hashPassword(password)
+        const user = await UserModel.findOne({_id:userCookie})
+        if(user.password == pas) {
+            user.deleteOne()
+            res.status(200).send({isDeleted: true});
+        } else {
+            res.status(200).send({isDeleted: false});
+        }
       } catch (error) {
           console.error(error);
           res.status(500).send({ error: error.messeage });

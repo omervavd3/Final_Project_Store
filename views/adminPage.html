@@ -10,12 +10,13 @@
   <link rel="stylesheet" href="style.css">
   <script src="./adminPage.js" defer></script>
   <script src="./d3.js" defer></script>
+  <script src="./logOut.js" defer></script>
 </head>
 
 <body onload="isAdminLoggedIn(), getAllProducts(), getAllCategories(), loadPurchaseHistory(), getData()">
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="./index.html">Store</a>
+      <a class="navbar-brand" onclick="logOut()">Store</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -23,7 +24,7 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="./index.html">Home</a>
+            <a class="nav-link" onclick="logOut()">Home</a>
           </li>
         </ul>
       </div>
@@ -41,52 +42,34 @@
 
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <button type="button" onclick="changeModalDiv('addProduct'), getAllCategories()" class="btn btn-primary"
+      data-bs-toggle="modal" data-bs-target="#staticBackdrop">
       Add Product
     </button>
+
+    <button type="button" onclick="changeModalDiv('addCategory')" class="btn btn-primary" data-bs-toggle="modal"
+      data-bs-target="#staticBackdrop">
+      Add Category
+    </button>
+
+    <button type="button" onclick="changeModalDiv('delete'), getAllCategories()" class="btn btn-primary"
+      data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Delete Category
+    </button>
+
+    <button type="button" onclick="changeModalDiv('addStore'), getAllCategories()" class="btn btn-primary"
+      data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Add Store Location
+    </button>
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
       aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Product</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form action="post" onsubmit="handleAddProduct(event)">
-              <div class="form-floating mb-3">
-                <input type="text" name="title" class="form-control" id="floatingTitle" placeholder="Product Title"
-                  required>
-                <label for="floatingTitle">Product Title</label>
-              </div>
-              <div class="form-floating">
-                <input type="number" name="price" class="form-control" id="floatingPrice" placeholder="Price" required>
-                <label for="floatingPrice">Price</label>
-              </div>
-              <div class="form-floating">
-                <textarea class="form-control" name="description" placeholder="Description" id="floatingDescription"
-                  style="height: 100px"></textarea>
-                <label for="floatingDescription">Description</label>
-              </div>
-              <div class="form-floating">
-                <input type="number" name="amount" class="form-control" id="floatingAmount" placeholder="Amount"
-                  required>
-                <label for="floatingAmount">Amount</label>
-              </div>
-              <div class="form-floating">
-                <input type="text" name="img" class="form-control" id="floatingImg" placeholder="Img">
-                <label for="floatingImg">Img (Optional)</label>
-              </div>
-              <div class="form-floating">
-                <select id="categorySelect" name="category" class="form-select" aria-label="Default select example">
-                  <!-- category option -->
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary">Add</button>
-            </form>
-          </div>
+        <div class="modal-content" id="adminPageModal">
+
           <div class="modal-footer">
 
           </div>
@@ -94,95 +77,19 @@
       </div>
     </div>
 
-    <div id="updateProduct">
-      <form action="patch" onsubmit="handleUpdateProduct(event)">
-        <div class="form-floating mb-3">
-          <input type="text" name="title" class="form-control" id="floatingTitleUpdate" placeholder="Product Title"
-            required>
-          <label for="floatingTitle">Product Title</label>
-        </div>
-        <div class="form-floating">
-          <input type="number" name="price" class="form-control" id="floatingPriceUpdate" placeholder="Price" required>
-          <label for="floatingPrice">Price</label>
-        </div>
-        <div class="form-floating">
-          <textarea class="form-control" name="description" placeholder="Description" id="floatingDescriptionUpdate"
-            style="height: 100px"></textarea>
-          <label for="floatingDescription">Description</label>
-        </div>
-        <div class="form-floating">
-          <input type="number" name="amount" class="form-control" id="floatingAmountUpdate" placeholder="Amount"
-            required>
-          <label for="floatingAmount">Amount</label>
-        </div>
-        <div class="form-floating">
-          <input type="text" name="img" class="form-control" id="floatingImgUpdate" placeholder="Img">
-          <label for="floatingImg">Img (Optional)</label>
-        </div>
-        <div class="form-floating">
-          <select id="updateCategorySelect" name="category" class="form-select" aria-label="Default select example">
-            <!-- category option -->
-          </select>
-        </div>
-        <input type="text" id="floatingId" name="id" value="asd">
-        <button type="submit" class="btn btn-primary">Update</button>
-      </form>
-    </div>
 
-
-    <!-- category -->
-    <div id="addCategory">
-      <form method="post" onsubmit="addCategory(event)">
-        <div class="form-floating">
-          <input type="text" name="category" class="form-control" id="floatingCategory" placeholder="Add Category">
-          <label for="floatingCategory">Add Category</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Category</button>
-      </form>
-    </div>
-
-    <div id="deleteCategory" onsubmit="deleteCategory(event)">
-      <form method="post">
-        <select id="deleteCategorySelect" name="deleteCategory" class="form-select" aria-label="Default select example">
-          <!-- category option -->
-        </select>
-        <button type="submit" class="btn btn-primary">Delete Category</button>
-      </form>
-    </div>
 
 
     <div id="purchaseHistory">
       <!-- purchase history -->
     </div>
 
-    <form method="post" onsubmit="sendTweet(event)">
-      <input type="text" name="tweet" placeholder="Add tweet">
-      <input type="submit" value="Send Tweet">
-    </form>
 
-    <form method="post" onsubmit="addStoreLocation(event)">
-      <div class="form-floating">
-        <input type="text" name="storeName" class="form-control" placeholder="Store Name">
-        <label for="floatingStoreName">Store Name</label>
-      </div>
-      <div class="form-floating">
-        <input type="number" step="0.000000001" name="storeLat" class="form-control" placeholder="Store Lat">
-        <label for="floatingStoreLat">Store Lat</label>
-      </div>
-      <div class="form-floating">
-        <input type="number" step="0.000000001" name="storeLng" class="form-control" placeholder="Store Lng">
-        <label for="floatingStoreLng">Store Lng</label>
-      </div>
-      <div class="form-floating">
-        <input type="number" maxlength="10" name="storePhone" class="form-control" placeholder="Store Phone">
-        <label for="floatingStorePhone">Store Phone</label>
-      </div>
-      <div class="form-floating">
-        <input type="text" name="storeCity" class="form-control" placeholder="Store City">
-        <label for="floatingStoreCity">Store City</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Add Store</button>
-    </form>
+
+
+    
+
+
 
   </main>
 
@@ -202,7 +109,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 
 </html>

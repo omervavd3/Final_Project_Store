@@ -117,3 +117,17 @@ exports.deleteFromDeleteProduct = async(req,res) => {
           res.status(500).send({ error: error.messeage });
       }
 }
+
+exports.deleteUser = async(req,res) => {
+    try {
+        const userCookie = req.cookies.user;
+        const cart = await CartModel.find({userId: userCookie})
+        for (let index = 0; index < cart.length; index++) {
+            await cart[index].deleteOne()
+        }
+        res.status(200).send({isDeleted: true});
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: error.messeage });
+      }
+}

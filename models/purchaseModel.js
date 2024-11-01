@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const PurchaseSchema = new Schema({
     userId: String,
+    userName: String,
     productsIds: [String],
     productsTitels: [String],
     productsAmounts: [Number],

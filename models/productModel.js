@@ -12,8 +12,7 @@ const ProductSchema = new Schema({
         default: "https://www.tiffincurry.ca/wp-content/uploads/2021/02/default-product.png"
     },
     category: String,
-    size: Number,
-    sex: String
+    gender: String
 });
 
 const ProductModel = mongoose.model("product", ProductSchema);

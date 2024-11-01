@@ -17,9 +17,9 @@ async function handleLogIn(ev) {
                 alert("Wrong user name/password");
             } else {
                 if (data.admin) {
-                    // Handle admin login
+                    window.location.href = "./adminPage.html"
                 } else {
-                    // Handle regular user login
+                    window.location.href = "./index.html"
                 }
             }
         }

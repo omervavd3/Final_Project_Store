@@ -26,12 +26,12 @@ async function isUserLoggedIn() {
             if (data.userCookie) {
                 loggedIn = true;
                 $("#nav-sign-up, #nav-log-in").hide();
-                $("#nav-personal").show();
+                $("#nav-personal, #nav-cart").show();
                 alert("Logged in");
             } else {
                 loggedIn = false;
                 $("#nav-sign-up, #nav-log-in").show();
-                $("#nav-personal").hide();
+                $("#nav-personal, #nav-cart").hide();
                 alert("Not logged in");
             }
         }
@@ -39,6 +39,7 @@ async function isUserLoggedIn() {
     
     hideLoading();
 }
+
 
 
 async function getAllProducts() {
@@ -93,8 +94,8 @@ function createStoreProductCard(products) {
                 </div>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">Price: ${p.price}$</li>
-                  <li class="list-group-item">Amount: ${p.amount}</li>
-                  <li class="list-group-item">Size: ${p.size}</li>
+                  <li class="list-group-item">Category: ${p.category}</li>
+                  <li class="list-group-item">Gender: ${p.gender}</li>
                 </ul>
                 <div class="card-body">
                   <a class="card-link ${disableClass}" aria-disabled="${bool}" onclick="addToCart('${p._id}')">${text}</a>
@@ -162,14 +163,36 @@ async function getAllCategories() {
     });
 }
 
+async function getMaxPrice() {
+    await $.ajax({
+        url: "/product/getMaxPrice",
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        success: function(data) {
+            return data.maxPrice
+        }
+    });
+}
+
 
 async function changeByCategory() {
     showLoading();
     const categorySelect = $("#CategorySelect").val();
+    const genderSelect = $("#genderSelect").val();
+    const priceSelect = $("#priceSelect").val();
+    var minPrice = 0
+    var maxPrice = 10000000
+     if(priceSelect == 1) {
+        minPrice = 0
+        maxPrice = 49
+    } else if(priceSelect == 2) {
+        minPrice = 49
+        maxPrice = 99
+    }
 
-    if (categorySelect === "All categories") {
-        getAllProducts();
-    } else {
         await $.ajax({
             url: "/product/getByCategory",
             method: "POST",
@@ -177,7 +200,7 @@ async function changeByCategory() {
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
-            data: JSON.stringify({ category: categorySelect }),
+            data: JSON.stringify({ category: categorySelect, gender: genderSelect, minPrice:minPrice, maxPrice:maxPrice }),
             success: function(data) {
                 const $productDiv = $("#productDiv");
                 if (data.products[0]) {
@@ -189,7 +212,6 @@ async function changeByCategory() {
                 }
             }
         });
-    }
     hideLoading();
 }
 

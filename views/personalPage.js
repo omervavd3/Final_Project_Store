@@ -96,34 +96,115 @@ function loadPurchaseHistory() {
 function setPurchaseCard(products, productsAmounts, totalPrice, productsTitle) {
     // products.sort((a, b) => a.title.localeCompare(b.title))
     var html = products.map((p, index) => {
-        if(p) {
             return `
             <div class="col">
               <div class="card" style="width: 18rem;">
-                <img src="${p.img}" class="card-img-top" alt="...">
                 <div class="card-body">
-                  <h5 class="card-title">${p.title}</h5>
-                  <p class="card-text">${p.description}</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Price: ${p.price}$</li>
-                  <li class="list-group-item">Size: ${p.size}</li>
-                </ul>
-                <div class="card-body">
-                    <p>Bought ${productsAmounts[index]} from item</p>
+                  <p>Bought ${productsAmounts[index]}: ${productsTitle[index]}</p>
                 </div>
               </div>
             </div>
         `
-        } else {
-            return `
-            <div class="col">
-              <p>${productsTitle[index]}</p>
-              Item no longer in store
-            </div>
-            `
-        }
     }).join(" ")
     html += `<p>Total price of purchase: ${totalPrice}$</p>`
     return html
+}
+
+async function changePassword(ev) {
+    ev.preventDefault();
+    const oldPassword = $(ev.target).find("input[name='oldPassword']").val();
+    const newPassword = $(ev.target).find("input[name='newPassword']").val();
+    $(ev.target).trigger("reset");
+
+
+    await $.ajax({
+        url: "/user/changePassword",
+        method: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({ oldPassword, newPassword }),
+        success: function(data) {
+            console.log(data);
+            if (data.changedPassword) {
+                alert("Password changed");
+            } else {
+                alert("Wrong password")
+            }
+            window.location.href = "./personalPage.html"
+        }
+    });
+}
+
+async function deleteAccount(ev) {
+    ev.preventDefault();
+    const password = $(ev.target).find("input[name='password']").val();
+    $(ev.target).trigger("reset");
+
+
+    await $.ajax({
+        url: "/user/deleteUser",
+        method: "DELETE",
+        contentType: "application/json",
+        data: JSON.stringify({ password }),
+        success: async function(data) {
+            console.log(data);
+            if (data.isDeleted) {
+                await $.ajax({
+                    url: "/cart/deleteUser",
+                    method: "DELETE",
+                    contentType: "application/json",
+                    success: function(data) {
+                        console.log(data.isDeleted);
+                    }
+                });
+                alert("Account deleted");
+                window.location.href = "./index.html"
+            } else {
+                alert("Something went wrong")
+                window.location.href = "./personalPage.html"
+            }
+        }
+    });
+}
+
+function personalPageDivChangePass() {
+    document.getElementById("personalPageDiv").innerHTML = `
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Password</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="post" onsubmit="changePassword(event)">
+                <div class="form-floating mb-3">
+                    <input type="password" name="oldPassword" class="form-control" id="floatingOldPassword"
+                        placeholder="Old Password" required>
+                    <label for="floatingOldPassword">Old Password</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" name="newPassword" class="form-control" id="floatingNewPassword"
+                        placeholder="New Password" required>
+                    <label for="floatingNewPassword">New Password</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Change Password</button>
+            </form>
+        </div>
+    `
+}
+
+function personalPageDivDeleteAccount() {
+    document.getElementById("personalPageDiv").innerHTML = `
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Account</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="post" onsubmit="deleteAccount(event)">
+                <div class="form-floating mb-3">
+                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Old Password"
+                        required>
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Delete Account</button>
+            </form>
+        </div>
+    `
 }

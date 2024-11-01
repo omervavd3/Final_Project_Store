@@ -57,9 +57,9 @@ main {
 
 #updateProduct {
     display: none;
-    #floatingId {
-        display: none;
-    }
+}
+#floatingId {
+    display: none;
 }
 
 a {

@@ -3,6 +3,7 @@ const productsIdsForPurchase = []
 const productsTitleForPurchase = []
 var totalPriceForPurchase = 0
 var userGender = ""
+var userName = ""
 
 hideLoading = () => {
     const loadingDiv = document.getElementById("loading");
@@ -107,13 +108,21 @@ async function payment(ev) {
         return;
     }
 
-    let userGender;
     await $.ajax({
         url: "/user/getUserGender",
         method: "GET",
         contentType: "application/json",
         success: function(data) {
             userGender = data.userGender;
+        }
+    });
+
+    await $.ajax({
+        url: "/user/getUserName",
+        method: "GET",
+        contentType: "application/json",
+        success: function(data) {
+            userName = data.userName;
         }
     });
 
@@ -126,7 +135,8 @@ async function payment(ev) {
             productsAmounts: totalAmountsForPurchase,
             productsTitleForPurchase: productsTitleForPurchase,
             totalPrice: totalPriceForPurchase,
-            userGender: userGender
+            userGender: userGender,
+            userName: userName
         }),
         success: async function(data) {
             if (data.purchaseCreated) {

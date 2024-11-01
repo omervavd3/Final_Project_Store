@@ -2,9 +2,9 @@ const PurchaseModel = require("../models/purchaseModel");
 
 exports.addPurchase = async(req,res) => {
     try {
-        const {productsIds, productsAmounts, totalPrice, userGender, productsTitleForPurchase} = req.body;
+        const {productsIds, userName, productsAmounts, totalPrice, userGender, productsTitleForPurchase} = req.body;
         const userId = req.cookies['user'];
-        const purchase = await PurchaseModel.create({userId:userId,productsIds:productsIds,productsTitels:productsTitleForPurchase, productsAmounts:productsAmounts, totalPrice:totalPrice, userGender:userGender})
+        const purchase = await PurchaseModel.create({userId:userId,userName:userName,productsIds:productsIds,productsTitels:productsTitleForPurchase, productsAmounts:productsAmounts, totalPrice:totalPrice, userGender:userGender})
         res.status(200).send({purchaseCreated:true, purchase:purchase})
     } catch (error) {
         console.error(error);
