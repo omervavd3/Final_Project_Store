@@ -4,30 +4,90 @@
     margin: 0;
     box-sizing: border-box;
     scroll-behavior: smooth;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    background-color:rgba(255,254,254,255);
+}
+
+
+.navbar{
+    z-index:0;
+}
+
+#indexMain{
+    list-style: none;  /* Remove list bullets */
+    display: flex;  /* Layout list items in a row */
+    align-items: center;  /* Align items vertically */
+    margin: 0;  /* Remove default margin */
+    padding: 0;
+}
+
+.form-select{
+    margin-top:-3.25vh;
+    margin-bottom:0.1vh;
+    background-color: #000;
+    text-align: center;
+    width: 100%;
+    cursor:pointer;
+    color:rgba(255,254,254,255);
+    z-index:2;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 4px 4px 8px rgba(125, 125, 125, 0.2);
+}
+
+.form-select:hover, .form-select:focus {
+    border-color: #ada8a8;  
+}
+
+.btn {
+    background-color: #000; /* Bold black for primary actions */
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    border-radius: 4px; /* Rounded corners for a modern look */
+    transition: background-color 0.3s ease; /* Animation for user feedback */
   }
   
+  .btn:hover {
+    background-color: #444; /* Dark gray on hover */
+  }
+
+  .nav-link{
+    color:black;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 4px 4px 8px rgba(125, 125, 125, 0.2);
+  }
+
+.nav-item{
+    margin-top:0.5vh;
+    margin-bottom:0.5vh
+}
   header{
    width:100%;
-   height:66px;
+   overflow:hidden;
   }
   
+
   .navbar-brand {
     display: flex;
+    height:40px;
     position:fixed;
     justify-content: center; 
     align-items: center;
     padding: 10px; 
-    background-color:rgba(255,254,254,255);
-    left:30%;
+    left:33.33%;
     z-index: 10;
+    top:1vh;
     overflow: hidden;
+    background-color: transparent;
   }
   
   .site-logo {
     width:25%;
     z-index: 10;
-    margin-bottom:-40px;
-    margin-top: -40px;
+    position:relative;
   }
   
   /* nav {
@@ -39,17 +99,15 @@
   
   .navbar-nav {
     z-index: 2;
+    height:7.5vh;
     position: fixed;
-    background-color: white;
-    top: 10px;;
-    padding:0 10px;
-    left:0;
-    width:100%;
+    background-color: rgba(255,254,254,255);
+    top: 0px;
+    left: 0px;
+    width: 100%;
   }
   
-  main {
-    border: blue solid 1px;
-  }
+
   
   #loading {
     position: fixed;
@@ -131,24 +189,26 @@
   }
   
   footer {
-    width: 100vw;
+    width: 100%;
     height: 300px;
     display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 2;
     position: relative;
+    margin-left:0;
+    box-sizing: border-box;
   }
   
   #map {
     height: 100%;
-    width: 70%;
+    width:70%;
     z-index: 3;
   }
   #contact {
     height: 100%;
     width: 30%;
   }
+
+  
   
   
   /* Logo Overlay */
@@ -176,9 +236,11 @@
   
   .background-video {
     width: 100%;
-    height: 100%;
+    height: 21vh;
     position: relative;
     top: 0;
     left: 0;
-    z-index: 0;
+    bottom: 0;
+    z-index: 0.5;
+    object-fit: cover;  
   }
