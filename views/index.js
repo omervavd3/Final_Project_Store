@@ -300,3 +300,12 @@ function initMap() {
         }
     });
 }
+function logo_overlay() {
+    setTimeout(() => {
+        document.getElementById('logo-overlay').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('logo-overlay').style.display = 'none';
+        }, 1000); // Waits for the fade-out animation to complete
+    }, 1500); // Adjust the duration before fade-out as needed (e.g., 3 seconds)
+};
+

@@ -14,10 +14,20 @@
 
 </head>
 
-<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart(), initMap(), getMaxPrice()">
+<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart(), initMap(), getMaxPrice(),logo_overlay()">
+    <header>
+        <a class="navbar-brand" href="./index.html"><img src="/images/logo.png" class="site-logo"></a>
+ </header>
+ <div id="logo-overlay" class="logo-overlay">
+     <img src="/images/logo.png" class="center-logo">
+ </div>
+<div>
+     <video autoplay muted loop class="background-video">
+         <source src="/videos/mainvideo.mp4" type="video/mp4">
+     </video>
+ </div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./index.html">Store</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

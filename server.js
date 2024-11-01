@@ -23,6 +23,7 @@ require('dotenv').config();
 
 //static files 
 app.use(express.static('views'));
+app.use(express.static('public'));
 
 //to be able to get data from client add this line
 app.use(express.json());
