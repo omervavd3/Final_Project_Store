@@ -6,12 +6,18 @@
     scroll-behavior: smooth;
     font-family: 'Montserrat', sans-serif;
     color: #333;
-    background-color:rgba(255,254,254,255);
+    background-color:rgba(255, 255, 255, 0.635);
+
 }
 
-
+.bg-body-tertiary{
+background-color: transparent !important;
+}
 .navbar{
-    z-index:0;
+  z-index:5;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
 }
 
 #indexMain{
@@ -41,7 +47,7 @@
 }
 
 .btn {
-    background-color: #000; /* Bold black for primary actions */
+    background-color:transparent; /* Bold black for primary actions */
     color: #fff;
     border: none;
     font-weight: bold;
@@ -53,20 +59,18 @@
     background-color: #444; /* Dark gray on hover */
   }
 
-  .nav-link{
-    color:black;
-    font-size: 16px;
-    font-weight: bold;
-    text-shadow: 4px 4px 8px rgba(125, 125, 125, 0.2);
-  }
-
-.nav-item{
-    margin-top:0.5vh;
-    margin-bottom:0.5vh
+  .nav-item{
+ 
+    justify-content: center; 
+    align-items: center;
 }
+
   header{
    width:100%;
    overflow:hidden;
+   align-items: center;
+   display: flex;
+   border-bottom:2px solid (255, 255, 255, 0.635);
   }
   
 
@@ -98,7 +102,7 @@
   } */
   
   .navbar-nav {
-    z-index: 2;
+    z-index: 20;
     height:7.5vh;
     position: fixed;
     background-color: rgba(255,254,254,255);
@@ -248,3 +252,62 @@
     z-index: 0.5;
     object-fit: cover;  
   }
+
+  .search-container {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 3;
+    justify-content: center;
+    align-items: center;
+    }
+    
+    .material-icons{
+      cursor: pointer;
+      font-size: 24px;
+      color:black;
+      z-index:3;
+    }
+    
+    .search-bar {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      transition: width 0.4s;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+    }
+    
+    .search-bar.active {
+      display: block;
+      width: 200px;
+    }
+  
+  
+    #nav-cart
+    {
+     margin-top: 1.625vh;
+     margin-left: 0.5vh;
+     padding:0px;
+    }
+  
+   #nav-personal{
+      margin-top: 1vh;
+   }
+   /* .navbar-toggler
+   {
+    position: fixed;
+    top: 10px;
+    left: 20px;
+    z-index:10;
+   }
+   .navbar-toggler-icon
+   {
+    z-index: 10;
+    color:black;
+    background-color: transparent;
+   } */

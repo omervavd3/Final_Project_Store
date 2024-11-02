@@ -362,3 +362,8 @@ function logo_overlay() {
     }, 1500); // Adjust the duration before fade-out as needed (e.g., 3 seconds)
 };
 
+function toggleSearch() {
+    const searchBar = document.getElementById('searchBar');
+    searchBar.classList.toggle('active');
+  }
+  
