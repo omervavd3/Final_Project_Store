@@ -364,6 +364,60 @@ function logo_overlay() {
 
 function toggleSearch() {
     const searchBar = document.getElementById('searchBar');
-    searchBar.classList.toggle('active');
-  }
+    const searchIcon = document.querySelector('.search-icon');
+
+    if (searchBar.style.display === 'none' || !searchBar.classList.contains('active')) {
+        searchBar.style.display = 'inline-block'; // Show the search bar
+        searchBar.classList.add('active'); // Add the active class
+        searchBar.focus(); // Focus on the search bar
+        searchIcon.style.display = 'none'; // Hide the search icon
+    } else {
+        searchBar.style.display = 'none'; // Hide the search bar
+        searchBar.classList.remove('active'); // Remove the active class
+        searchIcon.style.display = 'inline-block'; // Show the search icon
+    }
+}
+  
+
+ async function searchProducts() {
+    $('.search-bar').on('input', async function () {
+        const query = $(this).val().trim().toLowerCase();
+        showLoading(); // Call your showLoading function if needed
+        if (query !== '') {
+            await $.ajax({
+                url: "/product/searchProducts",
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({ query }),
+                success: function (data) {
+                    const $productDiv = $("#productDiv");
+                    if (data.products.length > 0) {
+                        // Use your existing function or create HTML for the products
+                        const html = createStoreProductCard(data.products);
+                        $productDiv.html(html);
+                    } else {
+                        $productDiv.html("No Products");
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching search results:", error);
+                    alert("An error occurred while searching for products.");
+                }
+            });
+        } 
+        else {
+            // When the search bar is cleared, call changeByCategory() to show all products
+            setTimeout(function () {
+                $('.search-bar').hide();
+                $('.search-icon').show();
+            }, 300);
+            changeByCategory();
+        }
+
+        hideLoading(); // Call your hideLoading function if needed
+    });
+}
   

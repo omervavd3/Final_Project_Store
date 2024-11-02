@@ -1,7 +1,7 @@
 const express = require('express');
 const productRouter = express.Router();
 
-const { getAllProducts, addProduct, updateProduct, getProductById, addToCart, removeOneFromCart, removeAllFromCart, deleteFromCategory, getByCategory, deleteFromDeleteProduct, getMaxPrice } = require('../controllers/productController');
+const { getAllProducts, addProduct, updateProduct, getProductById, addToCart, removeOneFromCart, removeAllFromCart, deleteFromCategory, getByCategory, deleteFromDeleteProduct, getMaxPrice ,searchProducts} = require('../controllers/productController');
 
 productRouter
     .get("/getAllProducts", getAllProducts)
@@ -15,5 +15,6 @@ productRouter
     .post("/getByCategory", getByCategory)
     .delete("/deleteFromDeleteProduct", deleteFromDeleteProduct)
     .get("/getMaxPrice", getMaxPrice)
+    .post("/searchProducts", searchProducts)
 
 module.exports = productRouter;

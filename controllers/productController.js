@@ -166,3 +166,25 @@ exports.getMaxPrice = async(req,res) => {
         res.status(500).send({ error: error.messeage });
     }
 }
+
+exports.searchProducts = async (req, res) => {
+    try {
+        const { query } = req.body;
+
+        if (!query || query.trim() === "") {
+            // Return all products if the query is empty
+            const products = await ProductModel.find({});
+            return res.status(200).send({ products });
+        }
+
+        // Perform a case-insensitive search on the title field
+        const products = await ProductModel.find({
+            title: { $regex: query, $options: "i" }
+        });
+
+        res.status(200).send({ products });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: error.message });
+    }
+};
