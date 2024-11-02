@@ -261,7 +261,47 @@ function fetchPerfumeTrends() {
 fetchPerfumeTrends();
 
 
-function initMap() {
+// function initMap() {
+//     $.ajax({
+//         url: "/storeLocation/getAllStoresLocations",
+//         method: "GET",
+//         headers: {
+//             Accept: "application/json",
+//             "Content-Type": "application/json",
+//         },
+//         success: function(data) {
+//             const map = L.map('map').setView([32.0853, 34.7818], 11);
+
+//             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//             }).addTo(map);
+
+//             const locations = data.stores.map(store => ({
+//                 lat: store.lat,
+//                 lng: store.lng,
+//                 name: store.name
+//             }));
+
+//             locations.forEach(location => {
+//                 const marker = L.marker([location.lat, location.lng]).addTo(map);
+//                 marker.bindPopup(`<b>${location.name}</b><br>Coordinates: ${location.lat}, ${location.lng}`);
+//             });
+
+//             const contact = data.stores.map(store => `
+//                 <ul>
+//                     <li>Phone: ${store.phone}</li>
+//                     <li>City: ${store.city}</li>
+//                 </ul>
+//             `).join(" ");
+//             $("#contact").html(contact);
+//         },
+//         error: function(error) {
+//             console.error("Error fetching store locations:", error);
+//         }
+//     });
+// }
+
+async function initMap() {
     $.ajax({
         url: "/storeLocation/getAllStoresLocations",
         method: "GET",
@@ -269,37 +309,49 @@ function initMap() {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
-        success: function(data) {
-            const map = L.map('map').setView([32.0853, 34.7818], 11);
+        success: async function(data) {
+            // Set a default center position (can be modified based on your data)
+            const position = { lat: 32.0853, lng: 34.7818 };
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            // Request needed libraries
+            //@ts-ignore
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-            const locations = data.stores.map(store => ({
-                lat: store.lat,
-                lng: store.lng,
-                name: store.name
-            }));
+            // Create the map, centered at the default position
+            const map = new Map(document.getElementById("map"), {
+                zoom: 10,
+                center: position,
+                mapId: "503e7f7672acec95",
+            });
 
-            locations.forEach(location => {
-                const marker = L.marker([location.lat, location.lng]).addTo(map);
-                marker.bindPopup(`<b>${location.name}</b><br>Coordinates: ${location.lat}, ${location.lng}`);
+            // Loop through the fetched store locations and create markers
+            data.stores.forEach(store => {
+                const storePosition = { lat: store.lat, lng: store.lng }; // Get latitude and longitude from store data
+
+                // Create a new marker for each store
+                const marker = new AdvancedMarkerElement({
+                    map: map,
+                    position: storePosition,
+                    title: store.name, // Use store name as the title
+                });
             });
 
             const contact = data.stores.map(store => `
-                <ul>
-                    <li>Phone: ${store.phone}</li>
-                    <li>City: ${store.city}</li>
-                </ul>
-            `).join(" ");
-            $("#contact").html(contact);
+                                <ul>
+                                    <li>Phone: ${store.phone}</li>
+                                    <li>City: ${store.city}</li>
+                                </ul>
+                            `).join(" ");
+                            $("#contact").html(contact);
         },
-        error: function(error) {
-            console.error("Error fetching store locations:", error);
+        error: function(xhr, status, error) {
+            console.error("Failed to load store locations:", error);
         }
     });
 }
+
+
 function logo_overlay() {
     setTimeout(() => {
         document.getElementById('logo-overlay').style.opacity = '0';
