@@ -301,6 +301,7 @@ async function fetchPerfumeTrends() {
 //     });
 // }
 
+let map;
 async function initMap() {
     $.ajax({
         url: "/storeLocation/getAllStoresLocations",
@@ -322,7 +323,7 @@ async function initMap() {
             const map = new Map(document.getElementById("map"), {
                 zoom: 10,
                 center: position,
-                mapId: "4daa84d3529ebfd6",
+                mapId: "ac8aaf64dee6d263",
             });
 
             // Loop through the fetched store locations and create markers
@@ -348,7 +349,7 @@ async function initMap() {
         error: function(xhr, status, error) {
             console.error("Failed to load store locations:", error);
         }
-    });
+    }); 
 }
 
 

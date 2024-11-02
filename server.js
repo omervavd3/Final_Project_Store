@@ -20,6 +20,7 @@ const $ = require( "jquery" )
 
 //for .env
 require('dotenv').config();
+exports.GOOGLE_MAPS_ID = process.env.GOOGLE_MAPS_ID
 
 //static files 
 app.use(express.static('views'));
