@@ -231,8 +231,8 @@ async function amountOfProductsInCart() {
     });
 }
 
-function fetchPerfumeTrends() {
-    $.ajax({
+async function fetchPerfumeTrends() {
+    await $.ajax({
         url: '/api/perfume-trends',
         method: 'GET',
         success: function(data) {
@@ -258,7 +258,7 @@ function fetchPerfumeTrends() {
 }
 
 
-fetchPerfumeTrends();
+
 
 
 // function initMap() {
@@ -322,7 +322,7 @@ async function initMap() {
             const map = new Map(document.getElementById("map"), {
                 zoom: 10,
                 center: position,
-                mapId: "503e7f7672acec95",
+                mapId: "4daa84d3529ebfd6",
             });
 
             // Loop through the fetched store locations and create markers
