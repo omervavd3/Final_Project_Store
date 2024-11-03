@@ -27,12 +27,10 @@ async function isUserLoggedIn() {
                 loggedIn = true;
                 $("#nav-sign-up, #nav-log-in").hide();
                 $("#nav-personal, #nav-cart").show();
-                alert("Logged in");
             } else {
                 loggedIn = false;
                 $("#nav-sign-up, #nav-log-in").show();
                 $("#nav-personal, #nav-cart").hide();
-                alert("Not logged in");
             }
         }
     });
@@ -133,7 +131,7 @@ async function addToCart(id) {
         data: JSON.stringify({ productId: id }),
         success: function(data) {
             console.log(data);
-            getAllProducts();
+            changeByCategory();
         }
     });
     
@@ -154,8 +152,10 @@ async function getAllCategories() {
         },
         success: function(data) {
             console.log(data.categories);
+            const categories = data.categories
+            categories.sort((a, b) => a.category.localeCompare(b.category))
             let html = '<option value="All categories">All categories</option>';
-            html += data.categories.map(category => `
+            html += categories.map(category => `
                 <option value="${category.category}">${category.category}</option>
             `).join(" ");
             $categorySelectDiv.html(html);

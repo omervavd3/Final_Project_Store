@@ -14,11 +14,10 @@ async function isAdminLoggedIn() {
         method: "GET",
         dataType: "json",
         success: function(data) {
-            console.log(data);
             if (data.adminCookie) {
-                alert("Logged in");
             } else {
                 alert("Not logged in");
+                window.location.href = "./index.html"
             }
         },
         error: function(error) {
@@ -151,7 +150,7 @@ async function handleAddProduct(ev) {
         });
         
         if (response.isCreated) {
-            // sendTweet(newProduct)
+            sendTweet(newProduct)
             window.location.href = "./adminPage.html";
         } else {
             alert("Product already exists");
@@ -357,7 +356,6 @@ function sendTweet(product) {
         contentType: "application/json",
         data: JSON.stringify({ tweet }),
         success: function(data) {
-            console.log(data);
         }
     });
 }
@@ -377,7 +375,6 @@ function addStoreLocation(ev) {
         contentType: "application/json",
         data: JSON.stringify({ name: storeName, lat: storeLat, lng: storeLng, phone: storePhone, city: storeCity }),
         success: function(data) {
-            console.log(data);
         }
     });
 }

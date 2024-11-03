@@ -12,7 +12,6 @@ async function handleLogIn(ev) {
         contentType: "application/json",
         data: JSON.stringify(user),
         success: function(data) {
-            console.log(data);
             if (data.message === "Not found") {
                 alert("Wrong user name/password");
             } else {

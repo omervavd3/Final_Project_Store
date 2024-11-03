@@ -14,11 +14,11 @@ function isUserLoggedIn() {
         type: "GET",
         dataType: "json",
         success: function(data) {
-            console.log(data);
             if (data.userCookie) {
                 
             } else {
-                console.log("Hi")
+                alert("Not logged in")
+                window.location.href = "./index.html"
             }
         },
         error: function(error) {
@@ -42,7 +42,6 @@ function loadPurchaseHistory() {
         },
         success: function(data) {
             const purchases = data.purchases;
-            console.log(purchases);
             let purchasePromises = [];
 
             for (let i = 0; i < purchases.length; i++) {
@@ -123,7 +122,6 @@ async function changePassword(ev) {
         contentType: "application/json",
         data: JSON.stringify({ oldPassword, newPassword }),
         success: function(data) {
-            console.log(data);
             if (data.changedPassword) {
                 alert("Password changed");
             } else {
@@ -146,14 +144,12 @@ async function deleteAccount(ev) {
         contentType: "application/json",
         data: JSON.stringify({ password }),
         success: async function(data) {
-            console.log(data);
             if (data.isDeleted) {
                 await $.ajax({
                     url: "/cart/deleteUser",
                     method: "DELETE",
                     contentType: "application/json",
                     success: function(data) {
-                        console.log(data.isDeleted);
                     }
                 });
                 alert("Account deleted");

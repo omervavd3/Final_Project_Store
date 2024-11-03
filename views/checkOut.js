@@ -26,12 +26,11 @@ function isUserLoggedIn() {
                 $("#nav-sign-up").hide();
                 $("#nav-log-in").hide();
                 $("#nav-personal").show();
-                alert("Logged in");
             } else {
                 $("#nav-sign-up").show();
                 $("#nav-log-in").show();
                 $("#nav-personal").hide();
-                alert("Not logged in");
+                window.location.href = "./index.html"
             }
         }
     });
@@ -146,6 +145,7 @@ async function payment(ev) {
                     contentType: "application/json",
                     success: function() {
                         alert("Payment submitted successfully!");
+                        window.location.href = "./index.html"
                     }
                 });
             } else {

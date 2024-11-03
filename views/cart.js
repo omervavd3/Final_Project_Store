@@ -14,17 +14,16 @@ function isUserLoggedIn() {
         method: "GET",
         contentType: "application/json",
         success: function(data) {
-            console.log(data);
             if (data.userCookie) {
                 $("#nav-sign-up").hide();
                 $("#nav-log-in").hide();
                 $("#nav-personal").show();
-                alert("Logged in");
             } else {
                 $("#nav-sign-up").show();
                 $("#nav-log-in").show();
                 $("#nav-personal").hide();
-                alert("Not logged in");
+                alert("Not logged in")
+                window.location.href = "./index.html"
             }
         }
     });
@@ -39,9 +38,7 @@ function getUserCart() {
         contentType: "application/json",
         success: function(data) {
             const userCartDiv = $("#userCartDiv");
-            console.log(data);
             if (data.userCart[0]) {
-                console.log(data.userCart);
                 createUserCartProductCard(data.userCart).then(html => {
                     html += '<a href="./checkOut.html">To Checkout</a>';
                     userCartDiv.html(html);
@@ -113,14 +110,12 @@ function removeOneFromCart(productId) {
         contentType: "application/json",
         data: JSON.stringify({ productId }),
         success: function(data) {
-            console.log(data);
             $.ajax({
                 url: "/product/removeOneFromCart",
                 method: "PATCH",
                 contentType: "application/json",
                 data: JSON.stringify({ productId }),
                 success: function(data) {
-                    console.log(data);
                     getUserCart();
                 }
             });
@@ -137,14 +132,12 @@ function removeAllFromCart(productId, amount) {
         contentType: "application/json",
         data: JSON.stringify({ productId }),
         success: function(data) {
-            console.log(data);
             $.ajax({
                 url: "/product/removeAllFromCart",
                 method: "PATCH",
                 contentType: "application/json",
                 data: JSON.stringify({ productId, amount }),
                 success: function(data) {
-                    console.log(data);
                     getUserCart();
                 }
             });

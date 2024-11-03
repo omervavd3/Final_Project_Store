@@ -18,16 +18,17 @@
     <header>
         <a class="navbar-brand" href="./index.html"><img src="/images/logo.png" class="site-logo"></a>
         <div>
- </header>
- <video autoplay muted loop class="background-video">
-    <source src="/videos/mainvideo.mp4" type="video/mp4">
-</video>
-</div>
- 
-<div class="profile">
-    <h2 id="usernameDisplay"> Welcome back, [User Name]</h2></div>
+    </header>
+    <video autoplay muted loop class="background-video">
+        <source src="/videos/mainvideo.mp4" type="video/mp4">
+    </video>
+    </div>
 
- 
+    <div class="profile">
+        <h2 id="usernameDisplay"> Welcome back, [User Name]</h2>
+    </div>
+
+
 
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -39,9 +40,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                
+
                     <li class="nav-item">
                         <a class="nav-link, navlog" href="" onclick="logOut(), isUserLoggedIn()">Log Out</a>
+                    </li>
+                    <li><button id="deleteAccountbtn" onclick="personalPageDivDeleteAccount()" type="button"
+                            class="personalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Delete Account
+                        </button>
+                    </li>
+                    <li><button id="chnagePasswordbtn" onclick="personalPageDivChangePass()" type="button"
+                            class="personalbtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Change Password
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -50,54 +61,51 @@
 
 
     <main>
-       
-
-        <select onchange="changeByCategory()" id="accountTitle=" class="form-select"
-        aria-label="Default select example">
-        <option selected value="0">Account Settings</option>
-        <option value="1"> <button id= "chnagePasswordbtn" onclick="personalPageDivChangePass()" type="button" class="personalbtn" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop">
-            Change Password
-        </button></option>
-        <option value="2">
-            <button id="deleteAccountbtn"onclick="personalPageDivDeleteAccount()" type="button" class="personalbtn" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
-                Delete Account
-            </button></option>
-            
-</select>
- <div class="profile id=usernameDisplay">  <h3>Purchase History</h3>
- <h5 id="purchaseHistory"></h5>
-        <!-- purchase history -->  
-</div>
 
 
-     <video autoplay muted loop class="personalVid">
-    <source src="/videos/mainvideo.mp4" type="video/mp4">
-</video>
- 
-</div>   
+        <!-- <select onchange="personalPageDivChangePass()" id="personalPageSelect" class="form-select"
+            aria-label="Default select example">
+            <option selected value="0">Account Settings</option>
+            <option value="1"> -->
+        <!-- <button id="chnagePasswordbtn" onclick="personalPageDivChangePass()" type="button" class="personalbtn"
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Change Password
+                </button> -->
+        <!-- </option> -->
+        <!-- <option value="2"> -->
+        <!-- <button id="deleteAccountbtn" onclick="personalPageDivDeleteAccount()" type="button" class="personalbtn"
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Delete Account
+                </button> -->
+        <!-- </option> -->
+        <!-- </select> -->
 
 
 
-     
+        <div class="profile id=usernameDisplay">
+            <h3>Purchase History</h3>
+            <h5 id="purchaseHistory"></h5>
+            <!-- purchase history -->
+        </div>
+
+
+        <video autoplay muted loop class="personalVid">
+            <source src="/videos/mainvideo.mp4" type="video/mp4">
+        </video>
+
+        </div>
+
+
+
+
         <!-- Button trigger modal -->
-        <!-- <button id= "chnagePasswordbtn" onclick="personalPageDivChangePass()" type="button" class="personalbtn" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop">
-            Change Password
-        </button>
-
-        <button id="deleteAccountbtn"onclick="personalPageDivDeleteAccount()" type="button" class="personalbtn" data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop">
-            Delete Account
-        </button> -->
-    </div>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content" id="personalPageDiv">
-                    
+
                 </div>
             </div>
         </div>

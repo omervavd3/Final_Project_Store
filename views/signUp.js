@@ -16,7 +16,6 @@ function handleSignUp(ev) {
         },
         data: JSON.stringify(user),
         success: function(data) {
-            console.log(data);
             if (!data.isCreated) {
                 alert("User name already exists");
             } else {

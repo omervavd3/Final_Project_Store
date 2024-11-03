@@ -83,12 +83,11 @@ async function getData() {
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data)
 
 
 
                 // Data for the chart (item names and quantities purchased)
-        const purchaseData = data.group.map(itemName => {
+        const purchaseData = data.group.map((itemName, index) => {
             return {
                 itemName: itemName._id,
                 quantity: itemName.totalQuantity
