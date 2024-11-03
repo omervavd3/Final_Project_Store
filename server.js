@@ -62,7 +62,6 @@ app.use("/tweet", twitterRouter);
 app.use('/api', trendsRouter);
 app.use('/storeLocation', storeLocationRouter);
 
-
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

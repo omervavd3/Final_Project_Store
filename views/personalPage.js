@@ -208,3 +208,23 @@ function personalPageDivDeleteAccount() {
         </div>
     `
 }
+
+$(document).ready(function () {
+    $.ajax({
+        url: '/user/getUserName', // Endpoint to get the username
+        method: 'GET',
+        success: function (data) {
+            if (data.userName) {
+                // Display the welcome message using the returned username
+                $('#usernameDisplay').text(`Welcome back, ${data.userName}`);
+            } else {
+                console.log('No username found');
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching username:', error);
+        }
+    });
+});
+
+  

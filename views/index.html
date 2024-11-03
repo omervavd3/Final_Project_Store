@@ -22,7 +22,7 @@
       </script> 
 </head>
 
-<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart(), initMap(), getMaxPrice(), logo_overlay(), fetchPerfumeTrends(),  searchProducts();">
+<body onload="isUserLoggedIn(), getAllProducts(), getAllCategories(), amountOfProductsInCart(), initMap(), getMaxPrice(), logo_overlay(), fetchPerfumeTrends(), searchProducts();">
     <header>
         <a class="navbar-brand" href="./index.html"><img src="/images/logo.png" class="site-logo"></a>
  </header>
@@ -48,10 +48,10 @@
                         <input type="text" class="search-bar" placeholder="Search..." id="searchBar">
                      </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="nav-sign-up" href="./signUp.html">Sign Up</a>
+                        <a class="navlog nav-link" id="nav-sign-up" href="./signUp.html">Sign Up</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="nav-log-in" href="./logIn.html">Log In</a>
+                        <a class="navlog nav-link" id="nav-log-in" href="./logIn.html">Log In</a>
                     </li>
                   
                     <li class="nav-item">
@@ -79,22 +79,30 @@
     </nav>
 
     <main id="indexMain">
+        <div class="row">
+        <div class="col-md-4">
         <select onchange="changeByCategory()" id="CategorySelect" class="form-select"
             aria-label="Default select example">
             <!-- category option -->
         </select>
+    </div>
+        <div class="col-md-4">
         <select onchange="changeByCategory()" id="genderSelect" class="form-select"
             aria-label="Default select example">
             <option selected value="All Genders">All Genders</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select>
+    </div>
+        <div class="col-md-4">
         <select onchange="changeByCategory()" id="priceSelect" class="form-select"
             aria-label="Default select example">
             <option selected value="0">All Prices</option>
             <option value="1">0 - 49 $</option>
             <option value="2">49 - 99 $</option>
     </select>
+</div>
+</div>
     </main>
 
 
