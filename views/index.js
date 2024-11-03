@@ -22,7 +22,6 @@ async function isUserLoggedIn() {
             "Content-Type": "application/json"
         },
         success: function(data) {
-            console.log(data);
             if (data.userCookie) {
                 loggedIn = true;
                 $("#nav-sign-up, #nav-log-in").hide();
@@ -53,7 +52,6 @@ async function getAllProducts() {
         success: function(data) {
             const productDiv = $("#productDiv");
             if (data.products.length > 0) {
-                console.log(data.products);
                 const html = createStoreProductCard(data.products);
                 productDiv.html(html);
             } else {
@@ -117,7 +115,6 @@ async function addToCart(id) {
         },
         data: JSON.stringify({ productId: id }),
         success: function(data) {
-            console.log(data);
         }
     });
     
@@ -130,7 +127,6 @@ async function addToCart(id) {
         },
         data: JSON.stringify({ productId: id }),
         success: function(data) {
-            console.log(data);
             changeByCategory();
         }
     });
@@ -151,7 +147,6 @@ async function getAllCategories() {
             "Content-Type": "application/json"
         },
         success: function(data) {
-            console.log(data.categories);
             const categories = data.categories
             categories.sort((a, b) => a.category.localeCompare(b.category))
             let html = '<option value="All categories">All categories</option>';
@@ -204,7 +199,6 @@ async function changeByCategory() {
             success: function(data) {
                 const $productDiv = $("#productDiv");
                 if (data.products[0]) {
-                    console.log(data.products);
                     const html = createStoreProductCard(data.products);
                     $productDiv.html(html);
                 } else {
@@ -225,7 +219,6 @@ async function amountOfProductsInCart() {
             "Content-Type": "application/json"
         },
         success: function(data) {
-            console.log(data);
             $("#amountOfProductsInCart").html(data.amount);
         }
     });
@@ -261,45 +254,7 @@ async function fetchPerfumeTrends() {
 
 
 
-// function initMap() {
-//     $.ajax({
-//         url: "/storeLocation/getAllStoresLocations",
-//         method: "GET",
-//         headers: {
-//             Accept: "application/json",
-//             "Content-Type": "application/json",
-//         },
-//         success: function(data) {
-//             const map = L.map('map').setView([32.0853, 34.7818], 11);
 
-//             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//             }).addTo(map);
-
-//             const locations = data.stores.map(store => ({
-//                 lat: store.lat,
-//                 lng: store.lng,
-//                 name: store.name
-//             }));
-
-//             locations.forEach(location => {
-//                 const marker = L.marker([location.lat, location.lng]).addTo(map);
-//                 marker.bindPopup(`<b>${location.name}</b><br>Coordinates: ${location.lat}, ${location.lng}`);
-//             });
-
-//             const contact = data.stores.map(store => `
-//                 <ul>
-//                     <li>Phone: ${store.phone}</li>
-//                     <li>City: ${store.city}</li>
-//                 </ul>
-//             `).join(" ");
-//             $("#contact").html(contact);
-//         },
-//         error: function(error) {
-//             console.error("Error fetching store locations:", error);
-//         }
-//     });
-// }
 
 let map;
 async function initMap() {
