@@ -87,7 +87,6 @@ function createUserCartProductCard(userCart) {
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item">Price: ${p.price}$</li>
                       <li class="list-group-item">Amount: ${userCart[index].amount}</li>
-                      <li class="list-group-item">Size: ${p.size}</li>
                     </ul>
                     <div class="card-body">
                       <a class="card-link" onclick="removeOneFromCart('${p._id}')">Remove One</a>
