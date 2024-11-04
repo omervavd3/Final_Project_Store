@@ -1,3 +1,5 @@
+const { log } = require("util");
+
 hideLoading = () => {
     const loadingDiv = document.getElementById("loading");
     loadingDiv.style.display = "none";
@@ -153,6 +155,7 @@ async function deleteAccount(ev) {
                     }
                 });
                 alert("Account deleted");
+                logOut()
                 window.location.href = "./index.html"
             } else {
                 alert("Something went wrong")

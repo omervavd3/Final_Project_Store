@@ -158,6 +158,7 @@ exports.deleteUser = async(req,res) => {
     try {
         const { password } = req.body;
         const userCookie = req.cookies.user;
+        console.log("here")
         const crypto = require('crypto');
         function hashPassword(password) {
           // Create a SHA-256 hash of the password
@@ -168,7 +169,7 @@ exports.deleteUser = async(req,res) => {
         const pas = await hashPassword(password)
         const user = await UserModel.findOne({_id:userCookie})
         if(user.password == pas) {
-            user.deleteOne()
+            await user.deleteOne()
             res.status(200).send({isDeleted: true});
         } else {
             res.status(200).send({isDeleted: false});
