@@ -21,7 +21,6 @@ function isUserLoggedIn() {
         method: "GET",
         contentType: "application/json",
         success: function(data) {
-            console.log(data);
             if (data.userCookie) {
                 $("#nav-sign-up").hide();
                 $("#nav-log-in").hide();
@@ -48,6 +47,10 @@ async function geTotalPrice() {
         method: "GET",
         contentType: "application/json",
         success: function(data) {
+            if(!data.userCart[0]) {
+                alert("Cart empty")
+                window.location.href = "./index.html"
+            }
             data.userCart.forEach((item, index) => {
                 totalAmounts[index] = item.amount;
                 totalAmountsForPurchase.push(item.amount);
