@@ -401,6 +401,7 @@ background-color: transparent !important;
 .card-img-top{
   width: 200px;
   height: 200px;
+  object-fit: contain;
 }
 .row{
   width:100%;
